@@ -9,7 +9,7 @@
     <title>Document</title>
 </head>
 <body>
-
+ <a href="{% url 'logout' %}"><button class="btn btn-info">Logout</button></a>
     <container class="container">
         <div class="row">
             <div class="col-md-9">
@@ -60,8 +60,8 @@
                         <td>{{i.description}}</td>
                         <td>{{i.price}}</td>
                         <td>{{i.is_active}}</td>
-                        <td><a href=""><button class="btn btn-secondary">Edit</button></a> </td>
-                        <td><a href=""><button class="btn btn-danger">Delete</button></a> </td>
+                        <td><a href="{% url 'edit_product' i.id %}"><button class="btn btn-secondary">Edit</button></a> </td>
+                        <td><a href="{% url 'delete_product' i.id %}"> <button class="btn btn-danger">Delete</button></a></td>
                       </tr>
                       {% endfor %}
                     </tbody>

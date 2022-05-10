@@ -6,45 +6,51 @@ def home(request):
     return render(request,'staff_module/index.html')
 
 def registration(request):
-    form = RegisterForm()
-    if request.method=='POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/login')
+    if request.session.has_key('staff'):
+        return redirect('/login')
+    else:
+        form = RegisterForm()
+        if request.method=='POST':
+            form = RegisterForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('/login')
 
-    context = {
-        'form' : form
-    }
-    return render(request,'staff_module/registerform.html',context)
+        context = {
+            'form' : form
+        }
+        return render(request,'staff_module/registerform.html',context)
 
 def login(request):
-    form = LoginForm()
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            try:
-                new_user = CustomUser.objects.get(email=request.POST.get('email'))
-                
-                user = authenticate(
-                    username=new_user.username ,
-                    password=request.POST['password'])
+    if request.session.has_key('staff'):
+        return redirect('/listing')
+    else:
+        form = LoginForm()
+        if request.method == 'POST':
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                try:
+                    new_user = CustomUser.objects.get(email=request.POST.get('email'))
+                    
+                    user = authenticate(
+                        username=new_user.username ,
+                        password=request.POST['password'])
 
-                if user is not None:
-                    request.session['staff'] = user.username
-                    return redirect('/listing')
-                else:
+                    if user is not None:
+                        request.session['staff'] = user.username
+                        return redirect('/listing')
+                    else:
+                        error = '*Please enter a correct username and password.Note that both fields may be case-sensitive'
+                    return render(request, 'staff_module/login.html', {'form': form, 'error': error})
+                except:
                     error = '*Please enter a correct username and password.Note that both fields may be case-sensitive'
                 return render(request, 'staff_module/login.html', {'form': form, 'error': error})
-            except:
-                error = '*Please enter a correct username and password.Note that both fields may be case-sensitive'
-            return render(request, 'staff_module/login.html', {'form': form, 'error': error})
 
+            else:
+            
+                return render(request, 'staff_module/login.html', {'form': form})
         else:
-          
-            return render(request, 'staff_module/login.html', {'form': form})
-    else:
-        return render(request,'staff_module/login.html',{'form':form})
+            return render(request,'staff_module/login.html',{'form':form})
 
 
 def staff_listing(request):
@@ -61,12 +67,15 @@ def staff_listing(request):
 
 
 def add_staff(request):
-    form = AddStaff()
-    if request.method == 'POST':
-        form=AddStaff(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/listing')
+    if request.session.has_key('staff'):
+        form = AddStaff()
+        if request.method == 'POST':
+            form=AddStaff(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('/listing')
+    else:
+        return redirect('/login')
 
 def edit_staff(request,pk):
     if request.session.has_key('staff'):
@@ -86,4 +95,8 @@ def edit_staff(request,pk):
         return render(request,'staff_module/edit_staff.html',{'form':form})
     else:
         return redirect('/login')
-        
+
+def logout(request):
+    if request.session.has_key('staff'):
+        del request.session['staff']
+        return redirect('/login')

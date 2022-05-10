@@ -10,14 +10,12 @@
 </head>
 <body>
     <container class="container">
-        <h1>Edit Staff</h1>
+        <h1>Edit Product</h1>
         <row class="row" style="align-items: center;">
                 <col class="col-sm-6">
                 <div class="card" style="">
                 <form action="" method="post" novalidate class="shadow p-5">
-                    {% if error %}
-                    <p style="color: red;">{{error}}</p>
-                    {% endif %}
+               
                     
               
                     {% csrf_token %}
@@ -31,7 +29,7 @@
                    <button type="submit" class="btn btn-primary">Submit</button>
                   </div>
                   <br>
-              
+         
                  </form>
             </col>
         </row>

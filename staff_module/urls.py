@@ -10,5 +10,6 @@ urlpatterns = [
     path('listing/',views.staff_listing,name='listing'),
     path('add_staff/',views.add_staff,name="add_staff"),
     path('edit_staff/<int:pk>/',views.edit_staff,name="edit_staff"),
+    path('logout/',views.logout,name="logout"),
 
 ]
