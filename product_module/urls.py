@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
+from product_module import views
 
 urlpatterns = [
-    path('admin/'),
+    path('staff/',views.demo,name="staff"),
 ]
